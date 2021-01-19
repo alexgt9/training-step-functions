@@ -1,6 +1,6 @@
 const https = require('https');
 
-exports.lambda_handler = (event, context, callback) => {
+exports.handler = (event, context, callback) => {
     console.log('event= ' + JSON.stringify(event));
     console.log('context= ' + JSON.stringify(context));
 
@@ -19,8 +19,8 @@ exports.lambda_handler = (event, context, callback) => {
     const options = {
       hostname: 'webhook.site',
       port: 443,
-      path: event.path,
-      method: event.verb
+      path: event.Event.path,
+      method: event.Event.verb
     };
     const req = https.request(options, (res) => {
         let body = '';
@@ -38,10 +38,13 @@ exports.lambda_handler = (event, context, callback) => {
         });
     });
     req.on('error', callback);
-    req.write(JSON.stringify({
+
+    const data = {
         "context": executionContext,
         "event": event
-    }));
+    };
+    console.log(data);
+    req.write(JSON.stringify(data));
     req.end();
     
 };

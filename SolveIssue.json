@@ -9,6 +9,7 @@
         "FunctionName": "arn:aws:lambda:us-east-1:010285592474:function:sendHttpRequest:$LATEST",
         "Payload.$": "$"
       },
+      "ResultPath": "$.Hello",
       "Next": "Lambda Callback"
     },
     "Lambda Callback": {
@@ -18,15 +19,32 @@
           "FunctionName": "arn:aws:lambda:us-east-1:010285592474:function:requiresApproval",
           "Payload": {
             "ExecutionContext.$": "$$",
-            "$": "$"
+            "Event.$": "$"
           }
         },
-        "Next": "World"
+        "ResultPath": "$.Status",
+        "Next": "ManualApprovalChoiceState"
     },
-    "World": {
-      "Type": "Pass",
-      "Result": "World",
-      "End": true
+    "ManualApprovalChoiceState": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.Status",
+          "StringEquals": "Approved!",
+          "Next": "ApprovedPassState"
+        },
+        {
+          "Variable": "$.Status",
+          "StringEquals": "Rejected!",
+          "Next": "RejectedPassState"
+        }
+      ]
+    },
+    "ApprovedPassState": {
+      "Type": "Succeed"
+    },
+    "RejectedPassState": {
+      "Type": "Fail"
     }
   }
 }
