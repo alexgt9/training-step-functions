@@ -43,7 +43,6 @@ exports.handler = (event, context, callback) => {
         "context": executionContext,
         "event": event
     };
-    console.log(data);
     req.write(JSON.stringify(data));
     req.end();
     
