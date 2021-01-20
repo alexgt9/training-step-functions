@@ -1,49 +1,127 @@
 {
-  "Comment": "A Hello World example of the Amazon States Language using Pass states",
-  "StartAt": "Hello",
+  "Comment": "Solving an Issue (PI)",
+  "StartAt": "Do The Code",
   "States": {
-    "Hello": {
+    "Do The Code": {
       "Type": "Task",
       "Resource": "arn:aws:states:::lambda:invoke",
       "Parameters": {
         "FunctionName": "arn:aws:lambda:us-east-1:010285592474:function:sendHttpRequest:$LATEST",
-        "Payload.$": "$"
+        "Payload": {
+          "verb": "POST",
+          "path.$": "$.path",
+          "data": {
+            "Action": "Do the code",
+            "code.$": "$.code" 
+          }
+        }
       },
-      "ResultPath": "$.Hello",
-      "Next": "Lambda Callback"
+      "ResultPath": "$.Code",
+      "Next": "Create the Branch"
     },
-    "Lambda Callback": {
+    "Create the Branch": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:010285592474:function:sendHttpRequest:$LATEST",
+        "Payload": {
+          "verb": "POST",
+          "path.$": "$.path",
+          "data": {
+            "action.$": "$$.State.Name",
+            "branch": "PAYPAL-666" 
+          }
+        }
+      },
+      "ResultPath": "$.Branch",
+      "Next": "Notify Reviewers"
+    },
+    "Notify Reviewers": {
         "Type": "Task",
         "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
         "Parameters": {
           "FunctionName": "arn:aws:lambda:us-east-1:010285592474:function:requiresApproval",
           "Payload": {
+            "Action.$": "$$.State.Name",
             "ExecutionContext.$": "$$",
-            "Event.$": "$"
+            "Event.$": "$",
+            "Branch.$": "$.Branch.Payload.result.branch"
           }
         },
         "ResultPath": "$.Status",
-        "Next": "ManualApprovalChoiceState"
+        "Next": "Get Some Approvals"
     },
-    "ManualApprovalChoiceState": {
+    "Get Some Approvals": {
       "Type": "Choice",
       "Choices": [
         {
           "Variable": "$.Status",
           "StringEquals": "Approved!",
-          "Next": "ApprovedPassState"
+          "Next": "Merge to Master"
         },
         {
           "Variable": "$.Status",
           "StringEquals": "Rejected!",
-          "Next": "RejectedPassState"
+          "Next": "TryAgain"
         }
       ]
     },
-    "ApprovedPassState": {
+    "Merge to Master": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:010285592474:function:sendHttpRequest:$LATEST",
+        "Payload": {
+          "verb": "POST",
+          "path.$": "$.path",
+          "data": {
+            "action.$": "$$.State.Name",
+            "Branch.$": "$.Branch.Payload.result.branch"
+          }
+        }
+      },
+      "ResultPath": "$.Merge",
+      "Next": "Create release"
+    },
+    "Create release": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:010285592474:function:sendHttpRequest:$LATEST",
+        "Payload": {
+          "verb": "POST",
+          "path.$": "$.path",
+          "data": {
+            "action.$": "$$.State.Name",
+            "release": "1.1.0"
+          }
+        }
+      },
+      "ResultPath": "$.Release",
+      "Next": "Notify DevOps"
+    },
+    "Notify DevOps": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:us-east-1:010285592474:function:sendHttpRequest:$LATEST",
+        "Payload": {
+          "verb": "POST",
+          "path.$": "$.path",
+          "data": {
+            "action.$": "$$.State.Name",
+            "message.$": "States.Format('Deploy the release {} on prod', $.Release.Payload.result.release)",
+            "Release.$": "$.Release.Payload.result.release"
+          }
+        }
+      },
+      "ResultPath": "$.Release",
+      "Next": "Done"
+    },
+    "Done": {
       "Type": "Succeed"
     },
-    "RejectedPassState": {
+    "TryAgain": {
       "Type": "Fail"
     }
   }
