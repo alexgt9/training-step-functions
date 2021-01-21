@@ -2,8 +2,7 @@
 
 Gist [AWS Step Functions training · GitHub](https://gist.github.com/alexgt9/a6e2bd4926060b70dc5db85f0badcf2a)
 
-## Problem - El laberinto - Uploading a file
-We have a lot of “steps” that a use case must do to complete a job. Like uploading a file to Signaturit. These step are logics that sometimes are optional, sometimes only for some clients, and maybe these “steps” are re used in another use case.
+## The Problem - El laberinto - Uploading a file - Solving an Issue
 
 ## SFN What is that?
 * Orquestrator
@@ -13,11 +12,6 @@ We have a lot of “steps” that a use case must do to complete a job. Like upl
 
 ## SFN How to solve the problem?
 ## Practice
-
-## Core use case, integration and example
-* Explain waitForTaskToken https://gist.github.com/alexgt9/a6e2bd4926060b70dc5db85f0badcf2a
-* Show PR with needed changes https://github.com/signaturit/core/pull/3447
-* Show tested workflow https://eu-west-1.console.aws.amazon.com/states/home?region=eu-west-1#/statemachines/view/arn:aws:states:eu-west-1:125723169973:stateMachine:WaitForCallbackStateMachine-i6o7fJYp6XcB
 
 # Guión
 * Explicar el problema de coordinar actions, ejemplo Laberinto
