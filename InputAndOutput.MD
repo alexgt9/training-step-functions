@@ -3,7 +3,6 @@
 ## Having this Raw Input
 
 ```json
-// Raw Input
 {
     "first": "1",
     "second": "2",
@@ -16,7 +15,6 @@
  ## Having this task output
 
  ```json
- // State Output
 {
     "ExecutedVersion": "$LATEST",
     "Payload": {
@@ -70,8 +68,7 @@
   ```
 ## And this State definition
 
-```json
-// State Definition
+```asl
 {
     "Type": "Task",
     "Resource": "arn:aws:states:::lambda:invoke",
@@ -104,13 +101,11 @@
 "parameter2": "four",
 "parameter3": {
     "stateName": "<theRealStateName>"
-    // "invalid.$": "$.first" 
 }
 ```
 
 ## Input for the next State
 ```json
-// Next state input
 {
     "first": "1",
     "second": "2",
