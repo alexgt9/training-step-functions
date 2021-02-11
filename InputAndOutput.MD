@@ -23,40 +23,12 @@
     },
     "SdkHttpMetadata": {
       "AllHttpHeaders": {
-        "X-Amz-Executed-Version": [
-          "$LATEST"
-        ],
-        "x-amzn-Remapped-Content-Length": [
-          "0"
-        ],
-        "Connection": [
-          "keep-alive"
-        ],
-        "x-amzn-RequestId": [
-          "x"
-        ],
-        "Content-Length": [
-          "91"
-        ],
-        "Date": [
-          "Thu, 21 Jan 2021 09:07:41 GMT"
-        ],
-        "X-Amzn-Trace-Id": [
-          "x"
-        ],
-        "Content-Type": [
-          "application/json"
-        ]
+        "X-Amz-Executed-Version": ...,
+        ...
       },
       "HttpHeaders": {
         "Connection": "keep-alive",
-        "Content-Length": "91",
-        "Content-Type": "application/json",
-        "Date": "Thu, 21 Jan 2021 09:07:41 GMT",
-        "X-Amz-Executed-Version": "$LATEST",
-        "x-amzn-Remapped-Content-Length": "0",
-        "x-amzn-RequestId": "x",
-        "X-Amzn-Trace-Id": "x"
+        ...
       },
       "HttpStatusCode": 200
     },
